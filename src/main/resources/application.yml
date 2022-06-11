@@ -1,0 +1,6 @@
+feign:
+  client:
+    config:
+      FooClient:
+        connectTimeout: 10000
+        readTimeout: 20000

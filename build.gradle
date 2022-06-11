@@ -1,0 +1,44 @@
+plugins {
+	id 'org.springframework.boot' version '2.6.0'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation group: 'org.springframework.data', name: 'spring-data-commons', version: '2.6.0'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation group: 'org.springframework.amqp', name: 'spring-amqp', version: '2.4.1'
+	implementation group: 'org.springframework.amqp', name: 'spring-rabbit', version: '2.4.1'
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:3.1.1'
+	implementation 'org.apache.commons:commons-lang3:3.12.0'
+	compileOnly 'org.projectlombok:lombok:1.18.22'
+	annotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation group: 'com.h2database', name: 'h2', version: '1.4.200'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+	testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.2'
+	testImplementation 'org.mockito:mockito-core:4.3.1'
+	testImplementation 'org.springframework.amqp:spring-rabbit-test:2.4.2'
+	testImplementation "org.testcontainers:testcontainers:1.16.3"
+	testImplementation "org.testcontainers:junit-jupiter:1.16.3"
+	testImplementation 'org.mock-server:mockserver-netty:5.12.0'
+	testImplementation 'org.mock-server:mockserver-client-java:5.12.0'
+	testCompileOnly 'org.projectlombok:lombok:1.18.22'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+}
+
+test {
+	useJUnitPlatform()
+}
