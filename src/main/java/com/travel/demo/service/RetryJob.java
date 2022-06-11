@@ -22,6 +22,6 @@ public class RetryJob {
 			} catch (Exception e) {
 				retry.getAndIncrement();
 			}
-		}, 10000, 3000, TimeUnit.MILLISECONDS);
+		}, 5, 5, TimeUnit.MINUTES);
 	}
 }
