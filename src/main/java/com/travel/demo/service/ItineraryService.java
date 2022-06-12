@@ -70,10 +70,9 @@ public class ItineraryService {
 	}
 
 	private Settlement getUnpaidSettlement(String settlementId, TravelManagementContract contract) {
-		return Optional.ofNullable(contract.getSettlements()).orElse(List.of()).stream()
-			.filter(s -> Long.parseLong(settlementId) == s.getId() &&
-				PaymentStatus.UNPAID.equals(s.getStatus()))
-			.findFirst()
+		return settlementRepository.findById(Long.parseLong(settlementId))
+			.filter(s -> s.getContractId().equals(contract.getId())
+				&& PaymentStatus.UNPAID.equals(s.getStatus()))
 			.orElseThrow(() -> new BusinessException(ExceptionCode.SETTLEMENT_INVALID));
 	}
 
