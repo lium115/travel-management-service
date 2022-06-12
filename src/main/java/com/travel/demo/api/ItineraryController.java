@@ -1,8 +1,10 @@
 package com.travel.demo.api;
 
+import com.travel.demo.constans.exceptions.BusinessException;
 import com.travel.demo.dto.response.PaymentCreateResponseDto;
 import com.travel.demo.service.ItineraryService;
 
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,11 +19,12 @@ public class ItineraryController {
 
     private ItineraryService itineraryService;
 
-    @PostMapping("/{contractId}/monthly-settlements/{settlementId}/payment")
+    @ExceptionHandler(BusinessException.class)
+    @PostMapping("/{contractId}/settlements/{settlementId}/payment")
     public PaymentCreateResponseDto requestPayment(
         @PathVariable("contractId") String contactId,
         @PathVariable("settlementId") String settlementId
-    ) throws Exception {
+    ){
         return itineraryService.requestPayment(contactId, settlementId);
     }
 }

@@ -1,6 +1,8 @@
 package com.travel.demo.service;
 
 import com.travel.demo.client.PaymentClient;
+import com.travel.demo.constans.exceptions.BusinessException;
+import com.travel.demo.constans.exceptions.ExceptionCode;
 import com.travel.demo.converter.ItineraryConverter;
 import com.travel.demo.dto.request.PaymentCreateRequestDto;
 import com.travel.demo.dto.response.PaymentCreateResponseDto;
@@ -15,9 +17,10 @@ import com.travel.demo.util.TransactionGenerator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
-import com.travel.demo.constans.PaymentStatus;
+import com.travel.demo.constans.Data.PaymentStatus;
 
 import lombok.AllArgsConstructor;
 
@@ -34,19 +37,15 @@ public class ItineraryService {
 	private SettlementRepository settlementRepository;
 
 	@Transactional
-	public PaymentCreateResponseDto requestPayment(String contractId, String settlementId) throws Exception {
+	public PaymentCreateResponseDto requestPayment(String contractId, String settlementId) {
 		TravelManagementContract contract = contractRepository.findById(Long.parseLong(contractId))
-			.orElseThrow(() -> new Exception("contract not found"));
+			.orElseThrow(() -> new BusinessException(ExceptionCode.CONTRACT_NOT_FOUND));
 
 		Settlement unpaidSettlement = getUnpaidSettlement(settlementId, contract);
 		String transactionNo = TransactionGenerator.generate(contractId);
 
-		paymentClient.payment(
-			PaymentCreateRequestDto.builder()
-				.transactionNo(transactionNo)
-				.amount(unpaidSettlement.getAmount())
-				.build()
-		);
+		pay(unpaidSettlement, transactionNo);
+
 		try {
 			return updatePaymentStatus(transactionNo, unpaidSettlement);
 		} catch (Exception e) {
@@ -54,28 +53,35 @@ public class ItineraryService {
 				try {
 					updatePaymentStatus(transactionNo1, settlement);
 				} catch (Exception ex) {
-					ex.printStackTrace();
+					throw ex;
 				}
 			}, transactionNo, unpaidSettlement, 5);
 		}
 		return PaymentCreateResponseDto.builder().transactionNo(transactionNo).build();
 	}
 
-	private Settlement getUnpaidSettlement(String settlementId, TravelManagementContract contract) throws Exception {
-		return Optional.ofNullable(contract.getSettlements())
-			.flatMap(settlements -> settlements.stream()
-				.filter(s ->
-					Long.parseLong(settlementId) == s.getId() &&
-						PaymentStatus.UNPAID.equals(s.getStatus())).findFirst()
-			)
-			.orElseThrow(() -> new Exception("settlement not found"));
+	private void pay(Settlement unpaidSettlement, String transactionNo) {
+		paymentClient.payment(
+			PaymentCreateRequestDto.builder()
+				.transactionNo(transactionNo)
+				.amount(unpaidSettlement.getAmount())
+				.build()
+		);
 	}
 
-	private PaymentCreateResponseDto updatePaymentStatus(String transactionNo, Settlement settlement) throws Exception {
+	private Settlement getUnpaidSettlement(String settlementId, TravelManagementContract contract) {
+		return Optional.ofNullable(contract.getSettlements()).orElse(List.of()).stream()
+			.filter(s -> Long.parseLong(settlementId) == s.getId() &&
+				PaymentStatus.UNPAID.equals(s.getStatus()))
+			.findFirst()
+			.orElseThrow(() -> new BusinessException(ExceptionCode.SETTLEMENT_INVALID));
+	}
+
+	private PaymentCreateResponseDto updatePaymentStatus(String transactionNo, Settlement settlement) {
 		PaymentResponseDto paymentResponseDto = paymentClient.getPayment(transactionNo);
 		paymentRepository.save(ItineraryConverter.convertTo(paymentResponseDto, settlement.getContractId()));
 		Settlement unpaidSettlement = settlementRepository.findById(settlement.getId())
-			.orElseThrow(() -> new Exception("settlement not found"));
+			.orElseThrow(() -> new BusinessException(ExceptionCode.SETTLEMENT_INVALID));
 		unpaidSettlement.setStatus(PaymentStatus.PAID);
 		settlementRepository.save(unpaidSettlement);
 		return ItineraryConverter.ToPaymentCreateResponseDto(paymentResponseDto);

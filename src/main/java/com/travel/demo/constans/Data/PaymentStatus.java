@@ -1,4 +1,4 @@
-package com.travel.demo.constans;
+package com.travel.demo.constans.Data;
 
 public enum PaymentStatus {
 	PAID("已支付"),

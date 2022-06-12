@@ -63,7 +63,7 @@ class ItineraryControllerTest {
 			.when(itineraryService).requestPayment(contractId, settlementId);
 
 		mvc.perform(
-				post("/travel-management-contracts/MOCK_ID/monthly-settlements/MOCK_SETTLEMENT_ID/payment").contentType(MediaType.APPLICATION_JSON)
+				post("/travel-management-contracts/MOCK_ID/settlements/MOCK_SETTLEMENT_ID/payment").contentType(MediaType.APPLICATION_JSON)
 			)
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.paymentId").value(paymentId))

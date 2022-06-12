@@ -1,8 +1,7 @@
 package com.travel.demo.repository;
 
-import com.travel.demo.constans.PaymentStatus;
+import com.travel.demo.constans.Data.PaymentStatus;
 import com.travel.demo.entity.Settlement;
-import com.travel.demo.entity.SettlementPayment;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -14,9 +13,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Optional;
-
-
-import static org.apache.commons.lang3.time.DateUtils.addMinutes;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest

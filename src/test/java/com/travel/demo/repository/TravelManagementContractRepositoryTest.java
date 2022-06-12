@@ -1,6 +1,6 @@
 package com.travel.demo.repository;
 
-import com.travel.demo.constans.PaymentStatus;
+import com.travel.demo.constans.Data.PaymentStatus;
 import com.travel.demo.entity.Settlement;
 import com.travel.demo.entity.TravelManagementContract;
 

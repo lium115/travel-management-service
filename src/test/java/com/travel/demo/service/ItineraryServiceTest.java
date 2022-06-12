@@ -1,12 +1,10 @@
 package com.travel.demo.service;
 
 import com.travel.demo.client.PaymentClient;
-import com.travel.demo.constans.PaymentStatus;
-import com.travel.demo.dto.request.PaymentCreateRequestDto;
+import com.travel.demo.constans.Data.PaymentStatus;
 import com.travel.demo.dto.response.PaymentCreateResponseDto;
 import com.travel.demo.dto.response.PaymentResponseDto;
 import com.travel.demo.entity.Settlement;
-import com.travel.demo.entity.SettlementPayment;
 import com.travel.demo.entity.TravelManagementContract;
 import com.travel.demo.repository.SettlementPaymentRepository;
 import com.travel.demo.repository.SettlementRepository;
@@ -27,7 +25,6 @@ import java.util.List;
 import java.util.Optional;
 
 
-import static org.apache.commons.lang3.time.DateUtils.addMinutes;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 
