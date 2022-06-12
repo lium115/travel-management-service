@@ -26,7 +26,7 @@ public class SettlementPaymentRepositoryTest {
 	@Test
 	void should_find_by_id() {
 		// given
-		String id = "pid";
+		Long id = 1L;
 		Long contractId = 1L;
 
 		settlementPaymentRepository.save(SettlementPayment.builder()

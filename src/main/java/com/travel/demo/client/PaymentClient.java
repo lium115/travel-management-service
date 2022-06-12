@@ -1,6 +1,6 @@
 package com.travel.demo.client;
 
-import com.travel.demo.dto.request.PaymentCreateRequestDto;
+import com.travel.demo.dto.request.PaymentRequestDto;
 import com.travel.demo.dto.response.PaymentResponseDto;
 
 import org.springframework.cloud.openfeign.FeignClient;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface PaymentClient {
 
     @RequestMapping(method = RequestMethod.POST, value = "/payments")
-    public void payment(@RequestBody PaymentCreateRequestDto dto);
+    public void payment(@RequestBody PaymentRequestDto dto);
 
     @RequestMapping(method = RequestMethod.GET, value = "/payments/{transactionNo}")
     public PaymentResponseDto getPayment(@RequestParam(name = "transactionNo") String transactionNo);

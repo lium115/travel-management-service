@@ -21,7 +21,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TravelManagementContract {
     @Id
-    @GeneratedValue
     Long id;
 
     BigDecimal serviceAmount;

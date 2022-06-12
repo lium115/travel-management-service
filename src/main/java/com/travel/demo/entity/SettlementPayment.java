@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
@@ -18,16 +19,17 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SettlementPayment {
-    @Id
-    String id;
+	@Id
+	@GeneratedValue
+	Long id;
 
-    Long contractId;
+	Long contractId;
 
-    String transactionNo;
+	String transactionNo;
 
-    BigDecimal amount;
+	BigDecimal amount;
 
-    Date createdAt;
+	Date createdAt;
 
-    Date expiredAt;
+	Date expiredAt;
 }

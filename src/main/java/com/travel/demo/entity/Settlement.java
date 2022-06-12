@@ -20,7 +20,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Settlement {
     @Id
-    @GeneratedValue
     Long id;
 
     BigDecimal amount;

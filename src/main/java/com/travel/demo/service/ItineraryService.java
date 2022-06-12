@@ -4,7 +4,7 @@ import com.travel.demo.client.PaymentClient;
 import com.travel.demo.constans.exceptions.BusinessException;
 import com.travel.demo.constans.exceptions.ExceptionCode;
 import com.travel.demo.converter.ItineraryConverter;
-import com.travel.demo.dto.request.PaymentCreateRequestDto;
+import com.travel.demo.dto.request.PaymentRequestDto;
 import com.travel.demo.dto.response.PaymentCreateResponseDto;
 import com.travel.demo.dto.response.PaymentResponseDto;
 import com.travel.demo.entity.Settlement;
@@ -17,9 +17,6 @@ import com.travel.demo.util.TransactionGenerator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.travel.demo.constans.Data.PaymentStatus;
 
 import lombok.AllArgsConstructor;
@@ -28,13 +25,13 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class ItineraryService {
 
-	private SettlementPaymentRepository paymentRepository;
+	private final SettlementPaymentRepository paymentRepository;
 
-	private TravelManagementContractRepository contractRepository;
+	private final TravelManagementContractRepository contractRepository;
 
-	private PaymentClient paymentClient;
+	private final PaymentClient paymentClient;
 
-	private SettlementRepository settlementRepository;
+	private final SettlementRepository settlementRepository;
 
 	@Transactional
 	public PaymentCreateResponseDto requestPayment(String contractId, String settlementId) {
@@ -43,10 +40,8 @@ public class ItineraryService {
 
 		Settlement unpaidSettlement = getUnpaidSettlement(settlementId, contract);
 		String transactionNo = TransactionGenerator.generate(contractId);
-
-		pay(unpaidSettlement, transactionNo);
-
 		try {
+			pay(unpaidSettlement, transactionNo);
 			return updatePaymentStatus(transactionNo, unpaidSettlement);
 		} catch (Exception e) {
 			RetryJob.execute((transactionNo1, settlement) -> {
@@ -62,7 +57,7 @@ public class ItineraryService {
 
 	private void pay(Settlement unpaidSettlement, String transactionNo) {
 		paymentClient.payment(
-			PaymentCreateRequestDto.builder()
+			PaymentRequestDto.builder()
 				.transactionNo(transactionNo)
 				.amount(unpaidSettlement.getAmount())
 				.build()

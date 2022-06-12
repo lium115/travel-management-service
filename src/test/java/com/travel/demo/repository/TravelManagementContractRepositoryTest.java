@@ -1,7 +1,5 @@
 package com.travel.demo.repository;
 
-import com.travel.demo.constans.Data.PaymentStatus;
-import com.travel.demo.entity.Settlement;
 import com.travel.demo.entity.TravelManagementContract;
 
 import org.junit.jupiter.api.Assertions;
@@ -22,15 +20,10 @@ public class TravelManagementContractRepositoryTest {
     @Autowired
     TravelManagementContractRepository contractRepository;
 
-    @Autowired
-    SettlementRepository settlementRepository;
-
     @Test
     void should_find_by_id() {
         // given
         Long contractId = 1L;
-        Long settlementId = 2L;
-
         contractRepository.save(TravelManagementContract.builder()
                 .id(contractId)
                 .companyId("cid")
@@ -38,20 +31,10 @@ public class TravelManagementContractRepositoryTest {
                 .createdAt(new Date())
                 .build());
 
-        settlementRepository.save(Settlement.builder()
-            .id(settlementId)
-            .contractId(contractId)
-            .status(PaymentStatus.PAID)
-            .createdAt(new Date())
-            .amount(BigDecimal.valueOf(1000))
-            .build());
-
         // when
         Optional<TravelManagementContract> contractOptional = contractRepository.findById(contractId);
         // then
         Assertions.assertTrue(contractOptional.isPresent());
         Assertions.assertEquals(contractId, contractOptional.get().getId());
-        Assertions.assertEquals(1, contractOptional.get().getSettlements().size());
-        Assertions.assertEquals(PaymentStatus.PAID, contractOptional.get().getSettlements().get(0).getStatus());
     }
 }
